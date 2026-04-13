@@ -158,6 +158,7 @@ export default function BuilderPage() {
       defaultDimensions: any
     } | undefined
     if (!data) return
+    if (!activatorEvent) return
     if (!(activatorEvent instanceof MouseEvent || activatorEvent instanceof PointerEvent || activatorEvent instanceof TouchEvent)) return
 
     const dropPos = getApproximateWorldPos(activatorEvent)

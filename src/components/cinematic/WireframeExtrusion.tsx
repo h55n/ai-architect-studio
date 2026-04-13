@@ -64,7 +64,7 @@ export function WireframeExtrusion() {
         const delay = i * 0.8
         const t = Math.max(0, Math.min(1, (elapsed - delay) / 1.2))
         const eased = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t // ease in-out quad
-        floor.scale.y = Math.max(0.001, eased * (targetHeight / baseHeight))
+        floor.scale.y = Math.min(500, Math.max(0.001, eased * (targetHeight / baseHeight)))
         floor.position.y = i * targetHeight + (eased * targetHeight) / 2
       })
 
