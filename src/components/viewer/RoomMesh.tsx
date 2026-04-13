@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import * as THREE from 'three'
 import { Html } from '@react-three/drei'
-import type { Room3D } from '@/types/design.types'
+import type { Room3D, Window3D, Door3D } from '@/types/design.types'
 import { WindowMesh } from './WindowMesh'
 import { DoorMesh } from './DoorMesh'
 import { useViewerStore } from '@/store/viewerStore'
@@ -61,7 +61,7 @@ type OpeningInfo = {
   height: number
   sill: number
   isWin: boolean
-  obj: import('@/types/design.types').Window3D | import('@/types/design.types').Door3D
+  obj: Window3D | Door3D
 } | null
 
 function RoomMeshComponent({
@@ -182,17 +182,17 @@ function RoomMeshComponent({
       </group>
 
       {/* Openings (Windows and Doors rendering) */}
-      {openings.north?.isWin && <group position={[w/2 + openings.north.offset, 0, WALL_T/2]}><WindowMesh win={openings.north.obj as import('@/types/design.types').Window3D} roomHeight={h} isGroundExterior={floorLevel === 0} /></group>}
-      {openings.north && !openings.north.isWin && <group position={[w/2 + openings.north.offset, 0, WALL_T/2]}><DoorMesh door={openings.north.obj as import('@/types/design.types').Door3D} roomColor={color} /></group>}
+      {openings.north?.isWin && <group position={[w/2 + openings.north.offset, 0, WALL_T/2]}><WindowMesh win={openings.north.obj as Window3D} roomHeight={h} isGroundExterior={floorLevel === 0} /></group>}
+      {openings.north && !openings.north.isWin && <group position={[w/2 + openings.north.offset, 0, WALL_T/2]}><DoorMesh door={openings.north.obj as Door3D} roomColor={color} /></group>}
 
-      {openings.south?.isWin && <group position={[w/2 + openings.south.offset, 0, d - WALL_T/2]}><WindowMesh win={openings.south.obj as import('@/types/design.types').Window3D} roomHeight={h} isGroundExterior={floorLevel === 0} /></group>}
-      {openings.south && !openings.south.isWin && <group position={[w/2 + openings.south.offset, 0, d - WALL_T/2]}><DoorMesh door={openings.south.obj as import('@/types/design.types').Door3D} roomColor={color} /></group>}
+      {openings.south?.isWin && <group position={[w/2 + openings.south.offset, 0, d - WALL_T/2]}><WindowMesh win={openings.south.obj as Window3D} roomHeight={h} isGroundExterior={floorLevel === 0} /></group>}
+      {openings.south && !openings.south.isWin && <group position={[w/2 + openings.south.offset, 0, d - WALL_T/2]}><DoorMesh door={openings.south.obj as Door3D} roomColor={color} /></group>}
 
-      {openings.east?.isWin && <group position={[w - WALL_T/2, 0, d/2 + openings.east.offset]} rotation={[0, -Math.PI/2, 0]}><WindowMesh win={openings.east.obj as import('@/types/design.types').Window3D} roomHeight={h} isGroundExterior={floorLevel === 0} /></group>}
-      {openings.east && !openings.east.isWin && <group position={[w - WALL_T/2, 0, d/2 + openings.east.offset]} rotation={[0, -Math.PI/2, 0]}><DoorMesh door={openings.east.obj as import('@/types/design.types').Door3D} roomColor={color} /></group>}
+      {openings.east?.isWin && <group position={[w - WALL_T/2, 0, d/2 + openings.east.offset]} rotation={[0, -Math.PI/2, 0]}><WindowMesh win={openings.east.obj as Window3D} roomHeight={h} isGroundExterior={floorLevel === 0} /></group>}
+      {openings.east && !openings.east.isWin && <group position={[w - WALL_T/2, 0, d/2 + openings.east.offset]} rotation={[0, -Math.PI/2, 0]}><DoorMesh door={openings.east.obj as Door3D} roomColor={color} /></group>}
 
-      {openings.west?.isWin && <group position={[WALL_T/2, 0, d/2 + openings.west.offset]} rotation={[0, Math.PI/2, 0]}><WindowMesh win={openings.west.obj as import('@/types/design.types').Window3D} roomHeight={h} isGroundExterior={floorLevel === 0} /></group>}
-      {openings.west && !openings.west.isWin && <group position={[WALL_T/2, 0, d/2 + openings.west.offset]} rotation={[0, Math.PI/2, 0]}><DoorMesh door={openings.west.obj as import('@/types/design.types').Door3D} roomColor={color} /></group>}
+      {openings.west?.isWin && <group position={[WALL_T/2, 0, d/2 + openings.west.offset]} rotation={[0, Math.PI/2, 0]}><WindowMesh win={openings.west.obj as Window3D} roomHeight={h} isGroundExterior={floorLevel === 0} /></group>}
+      {openings.west && !openings.west.isWin && <group position={[WALL_T/2, 0, d/2 + openings.west.offset]} rotation={[0, Math.PI/2, 0]}><DoorMesh door={openings.west.obj as Door3D} roomColor={color} /></group>}
 
       {/* Baseboard trim */}
       <mesh position={[w/2, 0.03, WALL_T/2]} geometry={baseboardGeo}>
