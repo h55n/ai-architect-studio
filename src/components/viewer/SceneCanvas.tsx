@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useRef, useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { Canvas, useThree } from '@react-three/fiber'
 import { OrbitControls, ContactShadows, Html } from '@react-three/drei'
 import * as THREE from 'three'
@@ -71,7 +71,6 @@ function SectionPlane({ design }: { design: DesignSpec }) {
 function RendererSetup() {
   const { gl, camera } = useThree()
   const { viewMode } = useViewerStore()
-  const orbitRef = useRef<{ enabled: boolean }>(null)
 
   useEffect(() => {
     gl.toneMapping = THREE.ACESFilmicToneMapping

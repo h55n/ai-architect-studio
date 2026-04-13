@@ -55,6 +55,8 @@ export function useArchitectAgent() {
       const message = err instanceof Error ? err.message : 'Unknown error'
       setGenerationError(`Generation failed: ${message}`)
       return null
+    } finally {
+      setGenerating(false)
     }
   }, [setDesign, setGenerating, setGenerationError, setGenerationProgress])
 
@@ -83,6 +85,8 @@ export function useArchitectAgent() {
       const message = err instanceof Error ? err.message : 'Unknown error'
       setGenerationError(`Design update failed: ${message}`)
       return null
+    } finally {
+      setGenerating(false)
     }
   }, [setDesign, setGenerating, setGenerationError])
 

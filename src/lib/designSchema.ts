@@ -41,6 +41,7 @@ const Door3DSchema = z.object({
 const Room3DSchema = z.object({
   id: z.string().catch(() => Math.random().toString(36).substring(7)),
   name: z.string().catch('Room'),
+  label: z.string().catch('Room'),
   type: z.string().catch('misc'),
   position: Position3DSchema,
   dimensions: Dimensions3DSchema,
@@ -80,18 +81,24 @@ export const DesignSpecSchema = z.object({
 export type DesignSpecValidated = z.infer<typeof DesignSpecSchema>
 
 export const ArchitectBriefSchema = z.object({
-  style: z.string(),
-  concept: z.string(),
-  spatialStrategy: z.string(),
-  moodBoard: z.array(z.string()),
-  keyFeatures: z.array(z.string()),
+  style: z.string().catch('Contemporary'),
+  concept: z.string().catch('A practical and elegant home for daily living.'),
+  spatialStrategy: z.string().catch('Open circulation with clear public/private zoning.'),
+  moodBoard: z.array(z.string()).catch([]),
+  keyFeatures: z.array(z.string()).catch([]),
   roomProgram: z.array(z.object({
-    type: z.string(),
-    count: z.number().int(),
-    sizeTier: z.enum(['small', 'medium', 'large']),
-    adjacentTo: z.array(z.string()),
-    floor: z.number().int(),
-  })),
+    type: z.string().catch('room'),
+    count: z.number().int().catch(1),
+    sizeTier: z.enum(['small', 'medium', 'large']).catch('medium'),
+    adjacentTo: z.array(z.string()).catch([]),
+    floor: z.number().int().catch(0),
+  }).catch({
+    type: 'room',
+    count: 1,
+    sizeTier: 'medium',
+    adjacentTo: [],
+    floor: 0,
+  })).catch([]),
 })
 
 export type ArchitectBriefValidated = z.infer<typeof ArchitectBriefSchema>

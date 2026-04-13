@@ -229,6 +229,75 @@ function PlantMesh({ item }: { item: Furniture }) {
   )
 }
 
+function LampMesh({ item }: { item: Furniture }) {
+  const { x, y, z } = item.position
+  const baseGeo = useMemo(() => new THREE.CylinderGeometry(0.12, 0.14, 0.05, 16), [])
+  const standGeo = useMemo(() => new THREE.CylinderGeometry(0.02, 0.02, 0.9, 10), [])
+  const shadeGeo = useMemo(() => new THREE.CylinderGeometry(0.2, 0.3, 0.3, 16, 1, true), [])
+  const matMetal = useMemo(() => new THREE.MeshStandardMaterial({ color: '#9B9BB0', metalness: 0.8, roughness: 0.2 }), [])
+  const matShade = useMemo(() => new THREE.MeshStandardMaterial({ color: '#FDF8E2', roughness: 0.8, transparent: true, opacity: 0.9 }), [])
+
+  return (
+    <group position={[x, y, z]}>
+      <mesh geometry={baseGeo} material={matMetal} position={[0, 0.025, 0]} castShadow />
+      <mesh geometry={standGeo} material={matMetal} position={[0, 0.5, 0]} castShadow />
+      <mesh geometry={shadeGeo} material={matShade} position={[0, 1, 0]} castShadow />
+    </group>
+  )
+}
+
+function BookshelfMesh({ item }: { item: Furniture }) {
+  const { x, y, z } = item.position
+  const frameGeo = useMemo(() => new THREE.BoxGeometry(1, 2, 0.32), [])
+  const shelfGeo = useMemo(() => new THREE.BoxGeometry(0.9, 0.04, 0.28), [])
+  const bookGeo = useMemo(() => new THREE.BoxGeometry(0.08, 0.25, 0.18), [])
+  const frameMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#8B6914', roughness: 0.7 }), [])
+  const bookMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#504E76', roughness: 0.8 }), [])
+
+  return (
+    <group position={[x, y, z]}>
+      <mesh geometry={frameGeo} material={frameMat} position={[0, 1, 0]} castShadow receiveShadow />
+      {[0.4, 0.9, 1.4].map((sy, i) => (
+        <mesh key={`shelf-${i}`} geometry={shelfGeo} material={frameMat} position={[0, sy, 0.02]} castShadow />
+      ))}
+      {[0, 1, 2, 3].map((i) => (
+        <mesh key={`book-${i}`} geometry={bookGeo} material={bookMat} position={[-0.28 + i * 0.18, 0.56, 0.02]} castShadow />
+      ))}
+    </group>
+  )
+}
+
+function TvStandMesh({ item }: { item: Furniture }) {
+  const { x, y, z } = item.position
+  const standGeo = useMemo(() => new THREE.BoxGeometry(1.6, 0.45, 0.4), [])
+  const screenGeo = useMemo(() => new THREE.BoxGeometry(1.1, 0.65, 0.04), [])
+  const supportGeo = useMemo(() => new THREE.BoxGeometry(0.08, 0.22, 0.08), [])
+  const standMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#504E76', roughness: 0.6 }), [])
+  const screenMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#101017', roughness: 0.15, metalness: 0.5 }), [])
+
+  return (
+    <group position={[x, y, z]}>
+      <mesh geometry={standGeo} material={standMat} position={[0, 0.22, 0]} castShadow receiveShadow />
+      <mesh geometry={supportGeo} material={standMat} position={[0, 0.62, -0.08]} castShadow />
+      <mesh geometry={screenGeo} material={screenMat} position={[0, 1.02, -0.1]} castShadow />
+    </group>
+  )
+}
+
+function StairMesh({ item }: { item: Furniture }) {
+  const { x, y, z } = item.position
+  const stepGeo = useMemo(() => new THREE.BoxGeometry(1.2, 0.14, 0.36), [])
+  const mat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#8B6914', roughness: 0.75 }), [])
+
+  return (
+    <group position={[x, y, z]}>
+      {Array.from({ length: 7 }).map((_, i) => (
+        <mesh key={`step-${i}`} geometry={stepGeo} material={mat} position={[0, 0.07 + i * 0.14, i * 0.32]} castShadow receiveShadow />
+      ))}
+    </group>
+  )
+}
+
 // ─── Generic Fallback ─────────────────────────────────────────────────────────
 function GenericMesh({ item }: { item: Furniture }) {
   const { x, y, z } = item.position
@@ -251,6 +320,10 @@ export const FurnitureFactory = memo(function FurnitureFactory({ item, roomColor
   if (t.includes('bath') || t.includes('tub')) return <BathtubMesh item={item} />
   if (t.includes('toilet')) return <ToiletMesh item={item} />
   if (t.includes('wardrobe') || t.includes('closet')) return <WardrobeMesh item={item} />
+  if (t.includes('lamp')) return <LampMesh item={item} />
+  if (t.includes('bookshelf') || t.includes('book shelf')) return <BookshelfMesh item={item} />
+  if (t.includes('tv_stand') || (t.includes('tv') && t.includes('stand'))) return <TvStandMesh item={item} />
+  if (t.includes('stair')) return <StairMesh item={item} />
   if (t.includes('plant')) return <PlantMesh item={item} />
   return <GenericMesh item={item} />
 })

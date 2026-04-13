@@ -19,6 +19,7 @@ export function QuizShell() {
     useQuizAgent()
   const { profile, setBrief } = useQuizStore()
   const { generate, generationProgress, generationError, design } = useArchitectAgent()
+  const isCompleteTriggered = useRef(false)
 
   // Start quiz on mount
   useEffect(() => {
@@ -33,8 +34,6 @@ export function QuizShell() {
       generate(profile, setBrief)
     }
   }, [isComplete, profile, generate, setBrief])
-
-  const isCompleteTriggered = useRef(false)
 
   if (isComplete && profile) {
     if (generationError) {

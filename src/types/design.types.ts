@@ -50,6 +50,7 @@ export interface Door3D {
 export interface Room3D {
   id: string
   name: string
+  label: string
   type: string          // 'bedroom' | 'living' | 'kitchen' | 'bathroom' | 'office' | etc.
   position: Position3D
   dimensions: Dimensions3D

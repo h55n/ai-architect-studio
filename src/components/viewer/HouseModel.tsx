@@ -1,16 +1,14 @@
 'use client'
 
-import { useMemo, memo } from 'react'
-import { Html } from '@react-three/drei'
+import { useMemo, memo, useRef } from 'react'
+import { Html, PivotControls } from '@react-three/drei'
 import * as THREE from 'three'
 import { useFrame } from '@react-three/fiber'
 import { useViewerStore } from '@/store/viewerStore'
+import { useDesignStore } from '@/store/designStore'
 import { RoomMesh } from './RoomMesh'
 import { FloorGrid } from './FloorGrid'
 import type { DesignSpec, Floor } from '@/types/design.types'
-
-import { PivotControls } from '@react-three/drei'
-import { useDesignStore } from '@/store/designStore'
 
 interface HouseModelProps {
   design: DesignSpec
@@ -135,7 +133,7 @@ function FloorLabel({ floor, yOffset }: { floor: Floor; yOffset: number }) {
 function DraggableRoom({ room, floorLevel, floorHeight, ...props }: any) {
   const { updateDesign, design } = useDesignStore()
   const localMatrix = useMemo(() => new THREE.Matrix4(), [])
-  const groupRef = React.useRef<THREE.Group>(null!)
+  const groupRef = useRef<THREE.Group>(null!)
 
   useFrame((state, delta) => {
     if (groupRef.current) {

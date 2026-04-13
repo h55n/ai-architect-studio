@@ -41,7 +41,9 @@ export function WireframeExtrusion() {
       color: 0xC4C3E3,
       wireframe: true,
     })
-    const baseGeo = new THREE.BoxGeometry(3, 0.01, 2)
+    const baseHeight = 0.01
+    const targetHeight = 3
+    const baseGeo = new THREE.BoxGeometry(3, baseHeight, 2)
 
     for (let i = 0; i < 3; i++) {
       const mesh = new THREE.Mesh(baseGeo, material)
@@ -62,8 +64,8 @@ export function WireframeExtrusion() {
         const delay = i * 0.8
         const t = Math.max(0, Math.min(1, (elapsed - delay) / 1.2))
         const eased = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t // ease in-out quad
-        floor.scale.y = 0.01 + eased * 299  // 0 → 3 units height
-        floor.position.y = i * 3 + (eased * 3) / 2
+        floor.scale.y = Math.max(0.001, eased * (targetHeight / baseHeight))
+        floor.position.y = i * targetHeight + (eased * targetHeight) / 2
       })
 
       // Slow camera orbit

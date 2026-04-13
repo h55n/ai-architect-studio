@@ -6,6 +6,14 @@
 
 /* ─── Design Tokens ─────────────────────────────────────────────────── */
 :root {
+  --color-violet-light: #C4C3E3;
+  --color-violet-dark:  #504E76;
+  --color-beige:        #FDF8E2;
+  --color-sage:         #A3B565;
+  --color-peach:        #FCDD9D;
+  --color-orange:       #F1642E;
+  --color-accent:       #1A56DB;
+
   --bg:            #FDF8E2;
   --surface:       #FFFFFF;
   --surface-2:     #F5F0D8;
@@ -14,14 +22,16 @@
   --text-primary:  #1A1828;
   --text-secondary:#504E76;
   --text-muted:    rgba(80,78,118,0.55);
-  --accent:        #1A56DB;
+  --accent:        var(--color-accent);
   --accent-hover:  #1344B8;
   --accent-soft:   rgba(26,86,219,0.12);
-  --violet-light:  #C4C3E3;
-  --violet-dark:   #504E76;
-  --sage:          #A3B565;
-  --peach:         #FCDD9D;
-  --orange:        #F1642E;
+  --violet-light:  var(--color-violet-light);
+  --violet-dark:   var(--color-violet-dark);
+  --beige:         var(--color-beige);
+  --sage:          var(--color-sage);
+  --peach:         var(--color-peach);
+  --orange:        var(--color-orange);
+  --border-color:  var(--border);
   --glass-bg:      rgba(253,248,226,0.68);
   --glass-border:  rgba(196,195,227,0.35);
   --viewer-bg:     #F2EDD7;
@@ -242,16 +252,13 @@ code, pre, .font-mono {
   gap: 10px;
   display: flex;
   align-items: center;
-  position: fixed;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%);
+  transform: translateY(0);
   animation: slideUp 400ms cubic-bezier(0.16,1,0.3,1) 600ms both;
 }
 
 @keyframes slideUp {
-  from { opacity:0; transform: translateX(-50%) translateY(16px); }
-  to   { opacity:1; transform: translateX(-50%) translateY(0); }
+  from { opacity:0; transform: translateY(16px); }
+  to   { opacity:1; transform: translateY(0); }
 }
 
 .ctrl-btn {

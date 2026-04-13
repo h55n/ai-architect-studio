@@ -14,16 +14,42 @@ const ASSET_CATEGORIES = {
     { id: 'room-garage', label: 'Garage', icon: '🚗', type: 'garage', defaultDimensions: { width: 6, height: 3, depth: 6 } },
     { id: 'room-hallway', label: 'Hallway', icon: '🚪', type: 'hallway', defaultDimensions: { width: 1.5, height: 3, depth: 4 } },
   ],
-  FURNITURE: [
-    { id: 'furn-bed-king', label: 'King Bed', type: 'furniture' },
-    { id: 'furn-sofa', label: 'Sofa', type: 'furniture' },
-    { id: 'furn-desk', label: 'Desk', type: 'furniture' },
+  WALLS: [
+    { id: 'wall-straight', label: 'Straight Wall', icon: '🧱', type: 'wall' },
+    { id: 'wall-curtain', label: 'Curtain Wall', icon: '🪟', type: 'wall' },
+    { id: 'wall-partition', label: 'Partition', icon: '📏', type: 'wall' },
+    { id: 'wall-half', label: 'Half Wall', icon: '⬛', type: 'wall' },
+    { id: 'wall-retaining', label: 'Retaining', icon: '🏗', type: 'wall' },
   ],
   OPENINGS: [
-    { id: 'door-single', label: 'Single Door', type: 'door' },
-    { id: 'window-small', label: 'Window S', type: 'window' },
-    { id: 'window-large', label: 'Window L', type: 'window' },
-  ]
+    { id: 'door-single', label: 'Single Door', icon: '🚪', type: 'door', width: 0.9, height: 2.1 },
+    { id: 'door-double', label: 'Double Door', icon: '🚪', type: 'door', width: 1.6, height: 2.2 },
+    { id: 'door-sliding', label: 'Sliding Door', icon: '🪟', type: 'door', width: 1.8, height: 2.1 },
+    { id: 'window-small', label: 'Window S', icon: '🪟', type: 'window', width: 0.9, height: 0.9 },
+    { id: 'window-large', label: 'Window L', icon: '🪟', type: 'window', width: 1.6, height: 1.2 },
+    { id: 'window-floor', label: 'Floor Window', icon: '🪟', type: 'window', width: 1.4, height: 2.1 },
+  ],
+  FURNITURE: [
+    { id: 'furn-bed-king', label: 'King Bed', icon: '🛏', type: 'furniture', furnitureType: 'bed' },
+    { id: 'furn-bed-queen', label: 'Queen Bed', icon: '🛏', type: 'furniture', furnitureType: 'bed' },
+    { id: 'furn-sofa', label: 'Sofa', icon: '🛋', type: 'furniture', furnitureType: 'sofa' },
+    { id: 'furn-desk', label: 'Desk', icon: '🧑‍💻', type: 'furniture', furnitureType: 'desk' },
+    { id: 'furn-dining-table', label: 'Dining Table', icon: '🍽', type: 'furniture', furnitureType: 'dining_table' },
+    { id: 'furn-kitchen-counter', label: 'Counter', icon: '🍳', type: 'furniture', furnitureType: 'kitchen_counter' },
+    { id: 'furn-bathtub', label: 'Bathtub', icon: '🛁', type: 'furniture', furnitureType: 'bathtub' },
+    { id: 'furn-toilet', label: 'Toilet', icon: '🚽', type: 'furniture', furnitureType: 'toilet' },
+    { id: 'furn-wardrobe', label: 'Wardrobe', icon: '🧥', type: 'furniture', furnitureType: 'wardrobe' },
+    { id: 'furn-plant', label: 'Plant', icon: '🪴', type: 'furniture', furnitureType: 'plant' },
+    { id: 'furn-lamp', label: 'Lamp', icon: '💡', type: 'furniture', furnitureType: 'lamp' },
+    { id: 'furn-bookshelf', label: 'Bookshelf', icon: '📚', type: 'furniture', furnitureType: 'bookshelf' },
+    { id: 'furn-tv-stand', label: 'TV Stand', icon: '📺', type: 'furniture', furnitureType: 'tv_stand' },
+    { id: 'furn-stair', label: 'Stair', icon: '🪜', type: 'furniture', furnitureType: 'stair' },
+  ],
+  STRUCTURE: [
+    { id: 'struct-column', label: 'Column', icon: '🗼', type: 'structure' },
+    { id: 'struct-staircore', label: 'Stair Core', icon: '🪜', type: 'structure' },
+    { id: 'struct-void', label: 'Atrium Void', icon: '⬜', type: 'structure' },
+  ],
 }
 
 function AssetCard({ asset }: { asset: any }) {
@@ -32,6 +58,10 @@ function AssetCard({ asset }: { asset: any }) {
     data: {
       assetId: asset.id,
       type: asset.type,
+      label: asset.label,
+      furnitureType: asset.furnitureType,
+      width: asset.width,
+      height: asset.height,
       defaultDimensions: asset.defaultDimensions,
     },
   })

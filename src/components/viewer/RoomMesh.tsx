@@ -55,6 +55,15 @@ function buildWallPanels(w: number, h: number, openingInfo: { offset: number; wi
   return panels
 }
 
+type OpeningInfo = {
+  offset: number
+  width: number
+  height: number
+  sill: number
+  isWin: boolean
+  obj: import('@/types/design.types').Window3D | import('@/types/design.types').Door3D
+} | null
+
 function RoomMeshComponent({
   room,
   floorLevel,
@@ -78,24 +87,49 @@ function RoomMeshComponent({
     return hex
   }
 
-  // Openings detection
-  const hasOpening = (wall: string) => {
-    const win = room.windows?.find((w) => w.wall === wall)
-    if (win) return { offset: win.offsetX * w, width: win.width, height: win.height, sill: win.sillHeight, isWin: true, obj: win }
-    const door = room.doors?.find((d) => d.wall === wall)
-    if (door) return { offset: door.offsetX * w, width: door.width, height: 2.1, sill: 0, isWin: false, obj: door }
-    return null
-  }
+  const openings = useMemo(() => {
+    const getOpening = (wall: 'north' | 'south' | 'east' | 'west', wallLength: number): OpeningInfo => {
+      const win = room.windows?.find((windowItem) => windowItem.wall === wall)
+      if (win) {
+        return {
+          offset: win.offsetX * wallLength,
+          width: win.width,
+          height: win.height,
+          sill: win.sillHeight,
+          isWin: true,
+          obj: win,
+        }
+      }
+      const door = room.doors?.find((doorItem) => doorItem.wall === wall)
+      if (door) {
+        return {
+          offset: door.offsetX * wallLength,
+          width: door.width,
+          height: 2.1,
+          sill: 0,
+          isWin: false,
+          obj: door,
+        }
+      }
+      return null
+    }
 
-  const northOp = hasOpening('north')
-  const southOp = hasOpening('south')
-  const eastOp = hasOpening('east')
-  const westOp = hasOpening('west')
+    const north = getOpening('north', w)
+    const south = getOpening('south', w)
+    const east = getOpening('east', d)
+    const west = getOpening('west', d)
 
-  const northPanels = useMemo(() => buildWallPanels(w, h, northOp), [w, h, northOp])
-  const southPanels = useMemo(() => buildWallPanels(w, h, southOp), [w, h, southOp])
-  const eastPanels = useMemo(() => buildWallPanels(d, h, eastOp), [d, h, eastOp])
-  const westPanels = useMemo(() => buildWallPanels(d, h, westOp), [d, h, westOp])
+    return {
+      north,
+      south,
+      east,
+      west,
+      northPanels: buildWallPanels(w, h, north),
+      southPanels: buildWallPanels(w, h, south),
+      eastPanels: buildWallPanels(d, h, east),
+      westPanels: buildWallPanels(d, h, west),
+    }
+  }, [room.windows, room.doors, w, h, d])
 
   return (
     <group
@@ -118,28 +152,28 @@ function RoomMeshComponent({
       {/* Walls */}
       <group>
         {/* North Wall (at z = 0) */}
-        {northPanels.map((p, i) => (
+        {openings.northPanels.map((p, i) => (
           <mesh castShadow receiveShadow key={`n-${i}`} position={[w/2 + p.x, p.y, WALL_T/2]}>
             <boxGeometry args={[p.width, p.height, WALL_T]} />
             <meshStandardMaterial color={color} />
           </mesh>
         ))}
         {/* South Wall (at z = d) */}
-        {southPanels.map((p, i) => (
+        {openings.southPanels.map((p, i) => (
           <mesh castShadow receiveShadow key={`s-${i}`} position={[w/2 + p.x, p.y, d - WALL_T/2]}>
             <boxGeometry args={[p.width, p.height, WALL_T]} />
             <meshStandardMaterial color={color} />
           </mesh>
         ))}
         {/* East Wall (at x = w) */}
-        {eastPanels.map((p, i) => (
+        {openings.eastPanels.map((p, i) => (
           <mesh castShadow receiveShadow key={`e-${i}`} position={[w - WALL_T/2, p.y, d/2 + p.x]}>
             <boxGeometry args={[WALL_T, p.height, p.width]} />
             <meshStandardMaterial color={color} />
           </mesh>
         ))}
         {/* West Wall (at x = 0) */}
-        {westPanels.map((p, i) => (
+        {openings.westPanels.map((p, i) => (
           <mesh castShadow receiveShadow key={`w-${i}`} position={[WALL_T/2, p.y, d/2 + p.x]}>
             <boxGeometry args={[WALL_T, p.height, p.width]} />
             <meshStandardMaterial color={color} />
@@ -148,17 +182,17 @@ function RoomMeshComponent({
       </group>
 
       {/* Openings (Windows and Doors rendering) */}
-      {northOp?.isWin && <group position={[w/2 + northOp.offset, 0, WALL_T/2]}><WindowMesh win={northOp.obj as import('@/types/design.types').Window3D} roomHeight={h} isGroundExterior={floorLevel === 0} /></group>}
-      {northOp && !northOp.isWin && <group position={[w/2 + northOp.offset, 0, WALL_T/2]}><DoorMesh door={northOp.obj as import('@/types/design.types').Door3D} roomColor={color} /></group>}
+      {openings.north?.isWin && <group position={[w/2 + openings.north.offset, 0, WALL_T/2]}><WindowMesh win={openings.north.obj as import('@/types/design.types').Window3D} roomHeight={h} isGroundExterior={floorLevel === 0} /></group>}
+      {openings.north && !openings.north.isWin && <group position={[w/2 + openings.north.offset, 0, WALL_T/2]}><DoorMesh door={openings.north.obj as import('@/types/design.types').Door3D} roomColor={color} /></group>}
 
-      {southOp?.isWin && <group position={[w/2 + southOp.offset, 0, d - WALL_T/2]}><WindowMesh win={southOp.obj as import('@/types/design.types').Window3D} roomHeight={h} isGroundExterior={floorLevel === 0} /></group>}
-      {southOp && !southOp.isWin && <group position={[w/2 + southOp.offset, 0, d - WALL_T/2]}><DoorMesh door={southOp.obj as import('@/types/design.types').Door3D} roomColor={color} /></group>}
+      {openings.south?.isWin && <group position={[w/2 + openings.south.offset, 0, d - WALL_T/2]}><WindowMesh win={openings.south.obj as import('@/types/design.types').Window3D} roomHeight={h} isGroundExterior={floorLevel === 0} /></group>}
+      {openings.south && !openings.south.isWin && <group position={[w/2 + openings.south.offset, 0, d - WALL_T/2]}><DoorMesh door={openings.south.obj as import('@/types/design.types').Door3D} roomColor={color} /></group>}
 
-      {eastOp?.isWin && <group position={[w - WALL_T/2, 0, d/2 + eastOp.offset]} rotation={[0, -Math.PI/2, 0]}><WindowMesh win={eastOp.obj as import('@/types/design.types').Window3D} roomHeight={h} isGroundExterior={floorLevel === 0} /></group>}
-      {eastOp && !eastOp.isWin && <group position={[w - WALL_T/2, 0, d/2 + eastOp.offset]} rotation={[0, -Math.PI/2, 0]}><DoorMesh door={eastOp.obj as import('@/types/design.types').Door3D} roomColor={color} /></group>}
+      {openings.east?.isWin && <group position={[w - WALL_T/2, 0, d/2 + openings.east.offset]} rotation={[0, -Math.PI/2, 0]}><WindowMesh win={openings.east.obj as import('@/types/design.types').Window3D} roomHeight={h} isGroundExterior={floorLevel === 0} /></group>}
+      {openings.east && !openings.east.isWin && <group position={[w - WALL_T/2, 0, d/2 + openings.east.offset]} rotation={[0, -Math.PI/2, 0]}><DoorMesh door={openings.east.obj as import('@/types/design.types').Door3D} roomColor={color} /></group>}
 
-      {westOp?.isWin && <group position={[WALL_T/2, 0, d/2 + westOp.offset]} rotation={[0, Math.PI/2, 0]}><WindowMesh win={westOp.obj as import('@/types/design.types').Window3D} roomHeight={h} isGroundExterior={floorLevel === 0} /></group>}
-      {westOp && !westOp.isWin && <group position={[WALL_T/2, 0, d/2 + westOp.offset]} rotation={[0, Math.PI/2, 0]}><DoorMesh door={westOp.obj as import('@/types/design.types').Door3D} roomColor={color} /></group>}
+      {openings.west?.isWin && <group position={[WALL_T/2, 0, d/2 + openings.west.offset]} rotation={[0, Math.PI/2, 0]}><WindowMesh win={openings.west.obj as import('@/types/design.types').Window3D} roomHeight={h} isGroundExterior={floorLevel === 0} /></group>}
+      {openings.west && !openings.west.isWin && <group position={[WALL_T/2, 0, d/2 + openings.west.offset]} rotation={[0, Math.PI/2, 0]}><DoorMesh door={openings.west.obj as import('@/types/design.types').Door3D} roomColor={color} /></group>}
 
       {/* Baseboard trim */}
       <mesh position={[w/2, 0.03, WALL_T/2]} geometry={baseboardGeo}>

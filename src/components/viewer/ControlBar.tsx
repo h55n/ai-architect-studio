@@ -208,7 +208,7 @@ function Divider() {
 
 function CtrlBtn({ icon, label, active, onClick }: { icon: ReactNode; label: string; active: boolean; onClick: () => void }) {
   return (
-    <button onClick={onClick} className={`control-btn flex flex-col items-center gap-[3px] ${active ? 'active' : ''}`}>
+    <button onClick={onClick} className={`ctrl-btn flex flex-col items-center gap-[3px] ${active ? 'active' : ''}`}>
       {icon}
       <span style={{ letterSpacing: '0.15em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
         {label}

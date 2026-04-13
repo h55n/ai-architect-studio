@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { QuizShell } from '@/components/quiz/QuizShell'
-import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { BoxSelect, Bot } from 'lucide-react'
 
 export default function HomePage() {
@@ -14,7 +13,6 @@ export default function HomePage() {
   if (showQuiz) {
     return (
       <main className="min-h-screen relative overflow-hidden bg-bg">
-        <ThemeToggle />
         <QuizShell />
       </main>
     )
@@ -22,8 +20,6 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen flex flex-col px-8 py-16 relative overflow-hidden bg-bg">
-      <ThemeToggle />
-
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}

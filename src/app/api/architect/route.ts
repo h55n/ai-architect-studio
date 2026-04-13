@@ -74,12 +74,16 @@ export async function POST(req: NextRequest) {
     let retries = 0
 
     while (retries < MAX_RETRIES) {
+      const retryMessage = lastError
+        ? [{ role: 'user' as const, content: `Last attempt failed with JSON/Zod error: ${lastError}. Fix the output.` }]
+        : []
+
       const response = await client.chat.complete({
         model: 'mistral-large-latest',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userContent },
-          ...(lastError ? [{ role: 'user', content: `Last attempt failed with JSON/Zod error: ${lastError}. Fix the output.` }] : []),
+          ...retryMessage,
         ],
         temperature: mode === 'CREATE' ? 0.2 : 0.2, // very rigid for layout logic
         responseFormat: { type: 'json_object' },

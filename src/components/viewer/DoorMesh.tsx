@@ -9,8 +9,11 @@ interface DoorMeshProps {
 }
 
 function adjustColorLightness(hex: string, percent: number): string {
-  // basic lighten approximation
-  return hex // simplified for speed; if needed we can parse hex and shift hsl
+  const color = new THREE.Color(hex)
+  const hsl = { h: 0, s: 0, l: 0 }
+  color.getHSL(hsl)
+  hsl.l = Math.max(0, Math.min(1, hsl.l + percent / 100))
+  return new THREE.Color().setHSL(hsl.h, hsl.s, hsl.l).getStyle()
 }
 
 export function DoorMesh({ door, roomColor }: DoorMeshProps) {
@@ -39,7 +42,7 @@ export function DoorMesh({ door, roomColor }: DoorMeshProps) {
       {/* Door Leaf (Panel) */}
       <mesh position={[width / 2 - 0.02, 0, door.swingDirection === 'inward' ? t/2 : -t/2]} rotation={[0, -Math.PI / 4, 0]}>
         <boxGeometry args={[width - 0.04, height, 0.04]} />
-        <meshStandardMaterial color={roomColor} />
+        <meshStandardMaterial color={adjustColorLightness(roomColor, -8)} />
       </mesh>
       
       {/* Swing arc for 2D floorplan view */}
