@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, memo } from 'react'
+import React, { useMemo, memo } from 'react'
 import { Html } from '@react-three/drei'
 import * as THREE from 'three'
 import { useFrame } from '@react-three/fiber'

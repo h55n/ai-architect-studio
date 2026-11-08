@@ -172,7 +172,7 @@ function RoomMeshComponent({
       {(showLabels || isHovered) && (
         <Html position={[w/2, h + 0.5, d/2]} center portal={{ current: document.getElementById('html-root')! }}>
           <span style={{ fontFamily: 'var(--font-space-mono)', fontSize: 11, color: 'var(--text-secondary)' }}>
-            {room.label || room.name}
+            {room.name}
           </span>
         </Html>
       )}

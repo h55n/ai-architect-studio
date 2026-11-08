@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userContent },
-          ...(lastError ? [{ role: 'user', content: `Last attempt failed with JSON/Zod error: ${lastError}. Fix the output.` }] : []),
+          ...(lastError ? [{ role: 'user' as const, content: `Last attempt failed with JSON/Zod error: ${lastError}. Fix the output.` }] : []),
         ],
         temperature: mode === 'CREATE' ? 0.2 : 0.2, // very rigid for layout logic
         responseFormat: { type: 'json_object' },
