@@ -32,6 +32,13 @@ export default function BuilderPage() {
   const router = useRouter()
   const { design, setDesign } = useDesignStore()
   const [isLoaded, setIsLoaded] = useState(false)
+  const [isHydrated, setIsHydrated] = useState(false)
+
+  useEffect(() => {
+    const unsubscribe = useDesignStore.persist.onFinishHydration(() => setIsHydrated(true))
+    setIsHydrated(useDesignStore.persist.hasHydrated())
+    return unsubscribe
+  }, [])
 
   // Raycaster utility (approximate conversion for dropping from 2D screen to 3D plane)
   const getApproximateWorldPos = (evt: PointerEvent) => {
@@ -71,9 +78,10 @@ export default function BuilderPage() {
 
       setDesign({ ...design, floors: newFloors })
     }
-  }, [design, setDesign])
+  }, [design, isHydrated, setDesign])
 
   useEffect(() => {
+    if (!isHydrated) return
     if (!design || design.architecturalStyle?.name !== 'Custom Builder') {
       const blankDesign: DesignSpec = {
         id: Math.random().toString(36).substring(7),
@@ -88,7 +96,7 @@ export default function BuilderPage() {
       setDesign(blankDesign)
     }
     setIsLoaded(true)
-  }, [design, setDesign])
+  }, [design, isHydrated, setDesign])
 
   if (!isLoaded || !design) return null
 

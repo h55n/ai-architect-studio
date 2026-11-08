@@ -111,7 +111,6 @@ export function SceneCanvas({ design, isScratchMode }: SceneCanvasProps) {
     <div id="canvas-container" className="absolute inset-0">
       <Canvas
         shadows="soft"
-        eventSource={typeof document !== 'undefined' ? document.getElementById('canvas-root')! : undefined}
         eventPrefix="client"
         camera={{ fov: 45, position: [22, 18, 22], near: 0.1, far: 300 }}
         gl={{ localClippingEnabled: true, antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.08 }}
