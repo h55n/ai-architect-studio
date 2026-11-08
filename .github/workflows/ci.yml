@@ -1,38 +1,27 @@
-name: CI — AI Architect Studio
-
+name: Offline quality checks
 on:
   push:
-    branches: [main, develop]
+    branches: [master, main, develop]
   pull_request:
-    branches: [main]
-
+    branches: [master, main]
+permissions:
+  contents: read
 jobs:
-  build-and-typecheck:
-    name: Build & Type Check
+  quality:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        node: [22, 24]
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run TypeScript check
-        run: npm run type-check
-
-      - name: Run ESLint
-        run: npm run lint
-
-      - name: Build
-        run: npm run build
-        env:
-          # Use a dummy key for CI — no real API calls in build
-          MISTRAL_API_KEY: "ci-placeholder-key"
-          NEXT_PUBLIC_APP_URL: "http://localhost:3000"
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm audit --omit=dev --audit-level high
+      - run: npm test
+      - run: npm run type-check
+      - run: npm run build

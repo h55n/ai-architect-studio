@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic'
 import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { DndContext, DragEndEvent, DefaultDropAnimationSideEffects } from '@dnd-kit/core'
+import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { useDroppable } from '@dnd-kit/core'
 import { useDesignStore } from '@/store/designStore'
 import { BuilderSidebar } from '@/components/viewer/BuilderSidebar'
